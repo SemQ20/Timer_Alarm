@@ -17,17 +17,11 @@ public:
 public slots:
     void s_timechange();
     void t_timerchange();
-    void changeStyle();
-    void changeStyleAlarm();
+    void changeStyleTimerButton();
+    void changeStyleAlarmButton();
     void resetTimer();
 private slots:
-    void on_pushButton_clicked();
-    void on_setAlarm_clicked();
-    void on_pushButton_4_clicked();
     void on_windowOnTopHint_clicked();
-    void on_setAlarm_2_clicked();
-    void on_resetTimer_clicked();
-    void on_resetTimer_new_clicked();
 
 private:
     Ui::MainWindow *ui;

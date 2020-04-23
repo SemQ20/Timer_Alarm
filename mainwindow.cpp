@@ -2,8 +2,6 @@
 #include "ui_mainwindow.h"
 #include <QTimer>
 #include <QTime>
-#include <QObject>
-#include <QtMultimedia>
 #include <QMediaPlayer>
 #include <QDir>
 #include <QUrl>
@@ -13,11 +11,12 @@ bool w_showed = false;
 bool pressed_1 = true;
 bool pressed_2 = true;
 QString timer;
+QString alarm_t;
 QTimer c_time;
 QTimer m_timer;
 QMediaPlayer m_player;
 QTime count(0,0,0);
-QString alarm_t;
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -32,23 +31,21 @@ MainWindow::MainWindow(QWidget *parent)
     m_player.setVolume(70);
     connect(&c_time,SIGNAL(timeout()),this,SLOT(s_timechange()));
     connect(&m_timer,SIGNAL(timeout()),this,SLOT(t_timerchange()));
-    connect(ui->pushButton,SIGNAL(clicked()),this,SLOT(changeStyle()));
-    connect(ui->setAlarm,SIGNAL(clicked()),this,SLOT(changeStyleAlarm()));
+    connect(ui->pushButton,SIGNAL(clicked()),this,SLOT(changeStyleTimerButton()));
+    connect(ui->setAlarm,SIGNAL(clicked()),this,SLOT(changeStyleAlarmButton()));
     connect(ui->resetTimer_new,SIGNAL(clicked()),this,SLOT(resetTimer()));
-    c_time.start(0);
-
+    c_time.start(50);
 }
 
-MainWindow::~MainWindow(){
+MainWindow::~MainWindow()
+{
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked(){}
-
 void MainWindow::s_timechange()
 {
-    ui->c_time->setText(QTime::currentTime().toString("hh : mm : ss"));
-    if(alarm_t == ui->c_time->text()){
+    ui->cur_time->setText(QTime::currentTime().toString("hh : mm : ss"));
+    if(alarm_t == ui->cur_time->text()){
         m_player.play();
     }
 }
@@ -56,10 +53,10 @@ void MainWindow::s_timechange()
 void MainWindow::t_timerchange()
 {
    count = count.addSecs(1);
-   ui->c_timer->setText(count.toString("hh : mm : ss"));
+   ui->wtimer->setText(count.toString("hh : mm : ss"));
 }
 
-void MainWindow::changeStyle()
+void MainWindow::changeStyleTimerButton()
 {
     if(!pressed_1){
        m_timer.stop();
@@ -72,7 +69,7 @@ void MainWindow::changeStyle()
     }
 }
 
-void MainWindow::changeStyleAlarm()
+void MainWindow::changeStyleAlarmButton()
 {
     if(!pressed_2){
         alarm_t = "";
@@ -89,24 +86,21 @@ void MainWindow::changeStyleAlarm()
 void MainWindow::resetTimer()
 {
     count = QTime(0,0,0);
-    ui->c_timer->setText(count.toString("hh : mm : ss"));
+    ui->wtimer->setText(count.toString("hh : mm : ss"));
 }
-
-void MainWindow::on_setAlarm_clicked(){}
 
 void MainWindow::on_windowOnTopHint_clicked()
 {
     if(!w_showed){
-        this->setWindowFlags(Qt::WindowStaysOnTopHint);
-        this->show();
-        w_showed = true;
-    }else{
-        Qt::WindowFlags flags;
-        flags &= (Qt::WindowStaysOnTopHint);
-        this->setWindowFlags(flags);
-        this->show();
-        w_showed = false;
-    }
+            this->setWindowFlags(Qt::WindowStaysOnTopHint);
+            this->show();
+            w_showed = true;
+        }else{
+            Qt::WindowFlags flags;
+            flags &= (Qt::WindowStaysOnTopHint);
+            this->setWindowFlags(flags);
+            this->show();
+            w_showed = false;
+        }
 }
 
-void MainWindow::on_resetTimer_new_clicked(){}
